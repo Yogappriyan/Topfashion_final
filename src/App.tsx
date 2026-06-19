@@ -23,6 +23,7 @@ import AdminOrders from './pages/admin/AdminOrders';
 
 import Logo from './components/Logo';
 import WhatsAppIcon from './components/WhatsAppIcon';
+import ScrollToTop from './components/ScrollToTop';
 
 function Navbar() {
   const { user, isAdmin, profile } = useAuth();
@@ -47,9 +48,13 @@ function Navbar() {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       toast.success('Signed in successfully');
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error('Login failed');
+      if (error && (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request')) {
+        toast.error('Sign-in window closed. Please try again.');
+      } else {
+        toast.error('Login failed');
+      }
     }
   };
 
@@ -331,9 +336,13 @@ function MobileBottomNav() {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       toast.success('Signed in successfully');
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error('Login failed');
+      if (error && (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request')) {
+        toast.error('Sign-in window closed. Please try again.');
+      } else {
+        toast.error('Login failed');
+      }
     }
   };
 
@@ -459,6 +468,7 @@ function MobileBottomNav() {
 export default function App() {
   return (
     <Router>
+      <ScrollToTop />
       <AuthProvider>
         <CartProvider>
           <div className="min-h-screen bg-white text-black selection:bg-black selection:text-white font-sans antialiased pb-20 md:pb-0">
