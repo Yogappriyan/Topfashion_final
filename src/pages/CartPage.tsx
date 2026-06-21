@@ -542,7 +542,7 @@ export default function CartPage() {
                                <input 
                                  required
                                  type="text" 
-                                 placeholder="Vishwa Kumar"
+                                 placeholder="Name"
                                  value={address.fullName}
                                  onChange={(e) => setAddress({...address, fullName: e.target.value})}
                                  className="w-full bg-white border border-transparent rounded-[1.5rem] px-12 py-5 text-sm focus:border-black transition-all outline-none"
@@ -556,7 +556,7 @@ export default function CartPage() {
                                <input 
                                  required
                                  type="email" 
-                                 placeholder="vishwa@example.com"
+                                 placeholder="example@gmail.com"
                                  value={address.email}
                                  onChange={(e) => setAddress({...address, email: e.target.value})}
                                  className="w-full bg-white border border-transparent rounded-[1.5rem] px-12 py-5 text-sm focus:border-black transition-all outline-none"
