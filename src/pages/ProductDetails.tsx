@@ -17,6 +17,7 @@ export default function ProductDetails() {
   
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>('');
+  const [selectedColor, setSelectedColor] = useState<string>('');
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -28,6 +29,7 @@ export default function ProductDetails() {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [qvSize, setQvSize] = useState<string>('');
+  const [qvColor, setQvColor] = useState<string>('');
   const [qvQuantity, setQvQuantity] = useState(1);
   const [activeQvImage, setActiveQvImage] = useState(0);
 
@@ -94,6 +96,24 @@ export default function ProductDetails() {
     }
   }, [profile, id]);
 
+  useEffect(() => {
+    if (product) {
+      const colors = product.colors && product.colors.length > 0
+        ? product.colors
+        : ['Jet Black', 'Pure White', 'Warm Beige', 'Navy Blue', 'Slate Grey'];
+      setSelectedColor(colors[0]);
+    }
+  }, [product]);
+
+  useEffect(() => {
+    if (quickViewProduct) {
+      const colors = quickViewProduct.colors && quickViewProduct.colors.length > 0
+        ? quickViewProduct.colors
+        : ['Jet Black', 'Pure White', 'Warm Beige', 'Navy Blue', 'Slate Grey'];
+      setQvColor(colors[0]);
+    }
+  }, [quickViewProduct]);
+
   const toggleWishlist = async () => {
     if (!user) return toast.error('Please sign in first');
     if (!id) return;
@@ -126,7 +146,8 @@ export default function ProductDetails() {
       price: product.price,
       image: product.images[0],
       quantity,
-      size: selectedSize
+      size: selectedSize,
+      color: selectedColor
     });
     toast.success('Added to cart');
   };
@@ -443,6 +464,67 @@ export default function ProductDetails() {
               </div>
             )}
 
+            {/* Color Selector */}
+            <div className="mb-10">
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Select Color</span>
+                {selectedColor && (
+                  <span className="text-[10px] font-bold text-[#007a78] uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100 italic">
+                    Color selected: {selectedColor}
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-4">
+                {(product.colors && product.colors.length > 0 
+                  ? product.colors 
+                  : ['Jet Black', 'Pure White', 'Warm Beige', 'Navy Blue', 'Slate Grey']
+                ).map((color) => {
+                  const COLOR_MAP: Record<string, string> = {
+                    'Black': '#000000',
+                    'Jet Black': '#111111',
+                    'White': '#ffffff',
+                    'Pure White': '#ffffff',
+                    'Beige': '#f5f5dc',
+                    'Warm Beige': '#d2b48c',
+                    'Blue': '#0000ff',
+                    'Navy Blue': '#1e3a8a',
+                    'Navy': '#1e3a8a',
+                    'Grey': '#808080',
+                    'Slate Grey': '#6b7280',
+                    'Red': '#ef4444',
+                    'Crimson': '#dc143c',
+                    'Green': '#22c55e',
+                    'Olive': '#808000',
+                    'Sand': '#c2b280',
+                    'Pink': '#ec4899',
+                    'Yellow': '#eab308'
+                  };
+                  const mappedColor = COLOR_MAP[color] || color.toLowerCase();
+                  const isWhiteOrLight = color.toLowerCase().includes('white') || color.toLowerCase().includes('beige') || mappedColor === '#ffffff' || mappedColor === '#f5f5dc';
+                  return (
+                    <button
+                      key={color}
+                      onClick={() => setSelectedColor(color)}
+                      className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all relative ${
+                        selectedColor === color
+                          ? 'border-black scale-110 shadow-xl ring-4 ring-black/10'
+                          : 'border-transparent hover:border-gray-300'
+                      }`}
+                      title={color}
+                      type="button"
+                    >
+                      <span 
+                        className={`w-9 h-9 rounded-full block border ${
+                          isWhiteOrLight ? 'border-gray-200' : 'border-transparent'
+                        }`}
+                        style={{ backgroundColor: mappedColor }}
+                      />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="space-y-6 sm:space-y-8">
               <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
                  <div className="bg-gray-50 p-2 rounded-2xl flex items-center justify-between sm:justify-start sm:space-x-4 border border-gray-100">
@@ -729,6 +811,67 @@ export default function ProductDetails() {
                     </div>
                   )}
 
+                  {/* Color picking selector */}
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Select Color</span>
+                      {qvColor && (
+                        <span className="text-[9px] font-bold text-[#007a78] uppercase tracking-widest italic bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
+                          Color selected: {qvColor}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                      {(quickViewProduct.colors && quickViewProduct.colors.length > 0
+                        ? quickViewProduct.colors
+                        : ['Jet Black', 'Pure White', 'Warm Beige', 'Navy Blue', 'Slate Grey']
+                      ).map(color => {
+                        const COLOR_MAP: Record<string, string> = {
+                          'Black': '#000000',
+                          'Jet Black': '#111111',
+                          'White': '#ffffff',
+                          'Pure White': '#ffffff',
+                          'Beige': '#f5f5dc',
+                          'Warm Beige': '#d2b48c',
+                          'Blue': '#0000ff',
+                          'Navy Blue': '#1e3a8a',
+                          'Navy': '#1e3a8a',
+                          'Grey': '#808080',
+                          'Slate Grey': '#6b7280',
+                          'Red': '#ef4444',
+                          'Crimson': '#dc143c',
+                          'Green': '#22c55e',
+                          'Olive': '#808000',
+                          'Sand': '#c2b280',
+                          'Pink': '#ec4899',
+                          'Yellow': '#eab308'
+                        };
+                        const mappedColor = COLOR_MAP[color] || color.toLowerCase();
+                        const isWhiteOrLight = color.toLowerCase().includes('white') || color.toLowerCase().includes('beige') || mappedColor === '#ffffff' || mappedColor === '#f5f5dc';
+                        return (
+                          <button
+                            key={color}
+                            onClick={() => setQvColor(color)}
+                            className={`w-9 h-9 rounded-full border flex items-center justify-center transition-all relative ${
+                              qvColor === color
+                                ? 'border-black scale-105 shadow-md ring-4 ring-black/5'
+                                : 'border-transparent hover:border-gray-300'
+                            }`}
+                            title={color}
+                            type="button"
+                          >
+                            <span 
+                              className={`w-7 h-7 rounded-full block border ${
+                                isWhiteOrLight ? 'border-gray-200' : 'border-transparent'
+                              }`}
+                              style={{ backgroundColor: mappedColor }}
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   {/* Stock counter and Quantity Adjuster */}
                   <div className="flex items-center gap-4">
                     <div className="bg-gray-50 border border-gray-150 rounded-xl p-1 flex items-center justify-between w-28">
@@ -763,7 +906,8 @@ export default function ProductDetails() {
                         price: quickViewProduct.price,
                         image: quickViewProduct.images[0],
                         quantity: qvQuantity,
-                        size: qvSize || undefined
+                        size: qvSize || undefined,
+                        color: qvColor
                       });
                       toast.success(`${quickViewProduct.name} added to shopping bag!`);
                       setQuickViewProduct(null);

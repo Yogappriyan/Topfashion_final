@@ -17,12 +17,17 @@ export default function ProductCard({ product }: ProductCardProps) {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    const colors = product.colors && product.colors.length > 0
+      ? product.colors
+      : ['Jet Black', 'Pure White', 'Warm Beige', 'Navy Blue', 'Slate Grey'];
     addToCart({
       productId: product.id,
       name: product.name,
       price: product.price,
       image: product.images[0],
-      quantity: 1
+      quantity: 1,
+      color: colors[0],
+      size: product.sizes && product.sizes.length > 0 ? product.sizes[0] : undefined
     });
     toast.success(`${product.name} added to cart`);
   };

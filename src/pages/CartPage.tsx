@@ -117,7 +117,8 @@ export default function CartPage() {
           price: typeof item.price === 'number' ? item.price : 0,
           quantity: typeof item.quantity === 'number' ? item.quantity : 1,
           image: item.image || '',
-          size: item.size || ''
+          size: item.size || '',
+          color: item.color || ''
         })),
         deliveryMethod,
         deliveryCharge,
@@ -161,7 +162,7 @@ export default function CartPage() {
         `*Please prepare and dispatch immediately!* ⚡`;
 
       setWhatsappPayload({
-        number: '8300062574',
+        number: '7826902842',
         message: waMsg
       });
 
@@ -183,7 +184,7 @@ export default function CartPage() {
 
       // If Razorpay Online is chosen, prompt Razorpay payment modal
       if (paymentMethod === 'razorpay') {
-        const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_SpJjXE3wMCFqWW';
+        const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholderKey';
         const rzpWindow = (window as any).Razorpay;
         
         if (!rzpWindow) {
@@ -246,7 +247,7 @@ export default function CartPage() {
               if (isExpressOrder) {
                 // Auto-open WhatsApp message for Express deliveries
                 setTimeout(() => {
-                  const waUrl = `https://wa.me/918300062574?text=${encodeURIComponent(waMsg)}`;
+                  const waUrl = `https://wa.me/917826902842?text=${encodeURIComponent(waMsg)}`;
                   window.open(waUrl, '_blank');
                 }, 1000);
               } else {
@@ -303,7 +304,7 @@ export default function CartPage() {
         
         // Auto-launch WhatsApp conversation link
         try {
-          const waUrl = `https://wa.me/918300062574?text=${encodeURIComponent(waMsg)}`;
+          const waUrl = `https://wa.me/917826902842?text=${encodeURIComponent(waMsg)}`;
           window.open(waUrl, '_blank');
         } catch (e) {
           console.warn('Auto popup blocked, user can click send button manually');
@@ -398,7 +399,7 @@ export default function CartPage() {
                   ⚠️ Direct WhatsApp Dispatcher
                 </p>
                 <a
-                  href={`https://wa.me/918300062574?text=${encodeURIComponent(whatsappPayload.message)}`}
+                  href={`https://wa.me/917826902842?text=${encodeURIComponent(whatsappPayload.message)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex w-full items-center justify-center gap-2.5 bg-[#25D366] text-white py-3.5 px-6 rounded-2xl text-[11px] font-bold uppercase tracking-widest hover:bg-green-600 transition-all shadow-md active:scale-95"
@@ -406,7 +407,7 @@ export default function CartPage() {
                   Confirm dispatch via WhatsApp
                 </a>
                 <p className="text-[9px] text-[#25D366] font-medium leading-normal">
-                  Click to open WhatsApp and send the pre-filled delivery instruction block to owner's WhatsApp (8300062574) for prompt dispatch!
+                  Click to open WhatsApp and send the pre-filled delivery instruction block to owner's WhatsApp (7826902842) for prompt dispatch!
                 </p>
               </div>
             )}
@@ -463,7 +464,7 @@ export default function CartPage() {
                   <>
                     <div className="space-y-4">
                       {(items || []).map((item) => (
-                        <div key={item.productId + (item.size || '')} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 sm:p-8 bg-gray-50/50 rounded-[1.5rem] sm:rounded-[2rem] border border-gray-100 group hover:bg-white hover:shadow-xl hover:shadow-black/5 transition-all gap-6">
+                        <div key={item.productId + (item.size || '') + (item.color || '')} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 sm:p-8 bg-gray-50/50 rounded-[1.5rem] sm:rounded-[2rem] border border-gray-100 group hover:bg-white hover:shadow-xl hover:shadow-black/5 transition-all gap-6">
                           <div className="flex items-center space-x-4 sm:space-x-8 w-full sm:w-auto">
                              <div className="w-16 sm:w-24 aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0 grayscale group-hover:grayscale-0 transition-all">
                                <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
@@ -480,13 +481,18 @@ export default function CartPage() {
                                      <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest">Size: {item.size}</span>
                                    </div>
                                  )}
+                                 {item.color && (
+                                   <div className="flex items-center space-x-2 sm:space-x-4 bg-gray-100 text-gray-850 rounded-full px-3 sm:px-4 py-1 sm:py-2 w-fit border border-gray-100">
+                                     <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest">Color: {item.color}</span>
+                                   </div>
+                                 )}
                                </div>
                              </div>
                           </div>
                           <div className="flex sm:flex-col justify-between items-center sm:items-end w-full sm:w-auto mt-2 sm:mt-0 border-t sm:border-none pt-4 sm:pt-0 gap-4">
                              <p className="text-lg sm:text-xl font-bold font-mono">₹{(item.price * item.quantity).toLocaleString()}</p>
                              <button 
-                               onClick={() => removeFromCart(item.productId, item.size)}
+                               onClick={() => removeFromCart(item.productId, item.size, item.color)}
                                className="p-2 sm:p-3 text-red-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
                              >
                                <Trash2 className="w-4 h-4 sm:w-5 h-5" />
@@ -536,7 +542,7 @@ export default function CartPage() {
                                <input 
                                  required
                                  type="text" 
-                                 placeholder="Name"
+                                 placeholder="Vishwa Kumar"
                                  value={address.fullName}
                                  onChange={(e) => setAddress({...address, fullName: e.target.value})}
                                  className="w-full bg-white border border-transparent rounded-[1.5rem] px-12 py-5 text-sm focus:border-black transition-all outline-none"
@@ -550,7 +556,7 @@ export default function CartPage() {
                                <input 
                                  required
                                  type="email" 
-                                 placeholder="example@gmail.com"
+                                 placeholder="vishwa@example.com"
                                  value={address.email}
                                  onChange={(e) => setAddress({...address, email: e.target.value})}
                                  className="w-full bg-white border border-transparent rounded-[1.5rem] px-12 py-5 text-sm focus:border-black transition-all outline-none"
@@ -664,7 +670,7 @@ export default function CartPage() {
                         <p className="text-gray-400 text-xs italic leading-relaxed">
                           Estimated Arrival: Within {deliverySettings.expressEstMin}
                         </p>
-                        <span className="block text-[8px] font-bold tracking-widest text-gray-400 uppercase mt-2">APPLICABLE ONLY FOR TRICHY SURROUNDING LOCATIONS</span>
+                        <span className="block text-[8px] font-bold tracking-widest text-gray-400 uppercase mt-2">EXPRESS EXPRESS COURIER</span>
                         
                         {!eligibleForExpress && (
                           <div className="absolute inset-0 bg-[#fdfbf7]/40 rounded-[2rem] flex items-center justify-center p-4 backdrop-blur-[0.5px]">
@@ -771,7 +777,7 @@ export default function CartPage() {
                         <CheckCircle2 className="w-4 h-4" />
                       </div>
                       <p className="text-[11px] text-green-800 font-medium leading-relaxed">
-                        Share your payment screenshot or delivery request on WhatsApp to +91 8300062574 for expedited dispatcher updates.
+                        Share your payment screenshot or delivery request on WhatsApp to +91 7826902842 for expedited dispatcher updates.
                       </p>
                     </div>
                   </div>
@@ -803,10 +809,13 @@ export default function CartPage() {
                 
                 <div className="space-y-6 mb-10 scrollbar-thin max-h-[30vh] overflow-y-auto pr-2">
                    {(items || []).map((item) => (
-                     <div key={item.productId + (item.size || '')} className="flex justify-between items-center text-sm">
+                     <div key={item.productId + (item.size || '') + (item.color || '')} className="flex justify-between items-center text-sm">
                         <div className="flex-1 pr-4">
                           <span className="text-gray-500 line-clamp-1">{item.name} × {item.quantity}</span>
-                          {item.size && <span className="text-[10px] text-gray-400 uppercase font-bold tracking-widest block">Size: {item.size}</span>}
+                          <div className="flex flex-wrap items-center gap-x-2 mt-0.5">
+                            {item.size && <span className="text-[9px] text-gray-400 uppercase font-bold tracking-widest block">Size: {item.size}</span>}
+                            {item.color && <span className="text-[9px] text-teal-600 uppercase font-bold tracking-widest block font-medium">Color: {item.color}</span>}
+                          </div>
                         </div>
                         <span className="font-bold font-mono">₹{(item.price * item.quantity).toLocaleString()}</span>
                      </div>

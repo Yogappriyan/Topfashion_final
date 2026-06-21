@@ -4,7 +4,7 @@ import { OrderItem } from '../types';
 interface CartContextType {
   items: OrderItem[];
   addToCart: (item: OrderItem) => void;
-  removeFromCart: (productId: string, size?: string) => void;
+  removeFromCart: (productId: string, size?: string, color?: string) => void;
   clearCart: () => void;
   total: number;
 }
@@ -35,7 +35,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
               price: typeof item.price === 'number' ? item.price : 0,
               quantity: typeof item.quantity === 'number' ? item.quantity : 1,
               image: item.image || item.images?.[0] || 'https://images.unsplash.com/photo-1594932224824-c451e59639f8?auto=format&fit=crop&q=80',
-              size: item.size
+              size: item.size,
+              color: item.color
             });
           }
         }
@@ -57,16 +58,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const addToCart = (newItem: OrderItem) => {
     setItems(prev => {
       const current = Array.isArray(prev) ? prev : [];
-      const existing = current.find(i => i.productId === newItem.productId && i.size === newItem.size);
+      const existing = current.find(i => i.productId === newItem.productId && i.size === newItem.size && i.color === newItem.color);
       if (existing) {
-        return current.map(i => (i.productId === newItem.productId && i.size === newItem.size) ? { ...i, quantity: i.quantity + newItem.quantity } : i);
+        return current.map(i => (i.productId === newItem.productId && i.size === newItem.size && i.color === newItem.color) ? { ...i, quantity: i.quantity + newItem.quantity } : i);
       }
       return [...current, newItem];
     });
   };
 
-  const removeFromCart = (productId: string, size?: string) => {
-    setItems(prev => (Array.isArray(prev) ? prev : []).filter(i => !(i.productId === productId && i.size === size)));
+  const removeFromCart = (productId: string, size?: string, color?: string) => {
+    setItems(prev => (Array.isArray(prev) ? prev : []).filter(i => !(i.productId === productId && i.size === size && i.color === color)));
   };
 
   const clearCart = () => setItems([]);

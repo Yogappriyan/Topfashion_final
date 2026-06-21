@@ -8,6 +8,7 @@ export interface Product {
   images: string[];
   stock: number;
   sizes?: string[];
+  colors?: string[]; // Added colors support
   isFeatured?: boolean;
   createdAt: any;
 }
@@ -19,6 +20,7 @@ export interface OrderItem {
   quantity: number;
   image: string;
   size?: string;
+  color?: string; // Added color support
 }
 
 export interface Order {

@@ -17,6 +17,7 @@ export default function AdminProducts() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [customColorInput, setCustomColorInput] = useState('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -27,10 +28,12 @@ export default function AdminProducts() {
     images: [''],
     stock: 0,
     sizes: ['M'],
+    colors: ['Jet Black'],
     isFeatured: false
   });
 
   const availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', 'Free Size'];
+  const availableColors = ['Jet Black', 'Pure White', 'Warm Beige', 'Navy Blue', 'Slate Grey', 'Crimson', 'Emerald Green', 'Olive', 'Golden Yellow', 'Dusty Pink'];
 
   useEffect(() => {
     if (!authLoading && !isAdmin) navigate('/');
@@ -53,6 +56,7 @@ export default function AdminProducts() {
           category: mapCategory(d.category),
           images: d.images || [],
           sizes: d.sizes || [],
+          colors: d.colors || ['Jet Black'],
           originalPrice: d.originalPrice || d.price
         } as Product;
       });
@@ -65,6 +69,7 @@ export default function AdminProducts() {
   }
 
   const handleOpenModal = (product: Product | null = null) => {
+    setCustomColorInput('');
     if (product) {
       setEditingProduct(product);
       setFormData({
@@ -76,6 +81,7 @@ export default function AdminProducts() {
         images: product.images.length > 0 ? product.images : [''],
         stock: product.stock,
         sizes: product.sizes || ['M'],
+        colors: product.colors || ['Jet Black'],
         isFeatured: product.isFeatured || false
       });
     } else {
@@ -89,6 +95,7 @@ export default function AdminProducts() {
         images: [''],
         stock: 0,
         sizes: ['M'],
+        colors: ['Jet Black'],
         isFeatured: false
       });
     }
@@ -142,6 +149,15 @@ export default function AdminProducts() {
       sizes: prev.sizes.includes(size) 
         ? prev.sizes.filter(s => s !== size)
         : [...prev.sizes, size]
+    }));
+  };
+
+  const toggleColor = (color: string) => {
+    setFormData(prev => ({
+      ...prev,
+      colors: (prev.colors || []).includes(color)
+        ? (prev.colors || []).filter(c => c !== color)
+        : [...(prev.colors || []), color]
     }));
   };
 
@@ -404,6 +420,152 @@ export default function AdminProducts() {
                             {size}
                           </button>
                         ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Colors Configuration</label>
+                      
+                      <div className="space-y-2">
+                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block">Quick Preset Selection</span>
+                        <div className="flex flex-wrap gap-2">
+                          {availableColors.map(color => (
+                            <button
+                              key={color}
+                              type="button"
+                              onClick={() => toggleColor(color)}
+                              className={`px-3 py-2 text-[9px] font-bold uppercase tracking-widest border rounded-xl transition-all flex items-center space-x-2 ${
+                                (formData.colors || []).includes(color)
+                                  ? 'bg-black border-black text-white'
+                                  : 'bg-white border-gray-200 text-black hover:border-black'
+                              }`}
+                            >
+                              <span 
+                                className="w-2.5 h-2.5 rounded-full inline-block border border-black/10 shrink-0"
+                                style={{
+                                  backgroundColor: ({
+                                    'Black': '#000000',
+                                    'Jet Black': '#111111',
+                                    'White': '#ffffff',
+                                    'Pure White': '#ffffff',
+                                    'Beige': '#f5f5dc',
+                                    'Warm Beige': '#d2b48c',
+                                    'Blue': '#0000ff',
+                                    'Navy Blue': '#1e3a8a',
+                                    'Grey': '#808080',
+                                    'Slate Grey': '#6b7280',
+                                    'Red': '#ef4444',
+                                    'Crimson': '#dc143c',
+                                    'Green': '#22c55e',
+                                    'Olive': '#808000',
+                                    'Sand': '#c2b280',
+                                    'Pink': '#ec4899',
+                                    'Yellow': '#eab308'
+                                  }[color] || color.toLowerCase())
+                                }}
+                              />
+                              <span>{color}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-100 space-y-3">
+                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block">Add or Alter Custom Colors</span>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={customColorInput}
+                            onChange={(e) => setCustomColorInput(e.target.value)}
+                            placeholder="Type color details (e.g. Navy Blue, Golden Sand)"
+                            className="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-2 text-xs outline-none focus:border-black transition-all"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                const colorToAdd = customColorInput.trim();
+                                if (colorToAdd) {
+                                  if (!(formData.colors || []).includes(colorToAdd)) {
+                                    setFormData(prev => ({
+                                      ...prev,
+                                      colors: [...(prev.colors || []), colorToAdd]
+                                    }));
+                                  }
+                                  setCustomColorInput('');
+                                }
+                              }
+                            }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const colorToAdd = customColorInput.trim();
+                              if (colorToAdd) {
+                                if (!(formData.colors || []).includes(colorToAdd)) {
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    colors: [...(prev.colors || []), colorToAdd]
+                                  }));
+                                }
+                                setCustomColorInput('');
+                              }
+                            }}
+                            className="bg-black hover:bg-gray-800 text-white rounded-xl px-4 py-2 text-[10px] font-bold uppercase tracking-widest transition-all"
+                          >
+                            + ADD
+                          </button>
+                        </div>
+
+                        {formData.colors && formData.colors.length > 0 && (
+                          <div className="space-y-1.5 pt-1">
+                            <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest block">Currently Available Colors for Product (click × to remove/alter):</span>
+                            <div className="flex flex-wrap gap-1.5">
+                              {formData.colors.map(color => (
+                                <span 
+                                  key={color} 
+                                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-100 rounded-xl text-[11px] font-semibold text-black shadow-sm"
+                                >
+                                  <span 
+                                    className="w-2 h-2 rounded-full inline-block border border-black/10 shrink-0" 
+                                    style={{
+                                      backgroundColor: ({
+                                        'Black': '#000000',
+                                        'Jet Black': '#111111',
+                                        'White': '#ffffff',
+                                        'Pure White': '#ffffff',
+                                        'Beige': '#f5f5dc',
+                                        'Warm Beige': '#d2b48c',
+                                        'Blue': '#0000ff',
+                                        'Navy Blue': '#1e3a8a',
+                                        'Grey': '#808080',
+                                        'Slate Grey': '#6b7280',
+                                        'Red': '#ef4444',
+                                        'Crimson': '#dc143c',
+                                        'Green': '#22c55e',
+                                        'Olive': '#808000',
+                                        'Sand': '#c2b280',
+                                        'Pink': '#ec4899',
+                                        'Yellow': '#eab308'
+                                      }[color] || color.toLowerCase())
+                                    }}
+                                  />
+                                  <span>{color}</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setFormData(prev => ({
+                                        ...prev,
+                                        colors: (prev.colors || []).filter(c => c !== color)
+                                      }));
+                                    }}
+                                    className="text-gray-400 hover:text-red-500 font-bold ml-1.5 text-xs focus:outline-none transition-colors"
+                                  >
+                                    ×
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
