@@ -184,8 +184,7 @@ export default function CartPage() {
 
       // If Razorpay Online is chosen, prompt Razorpay payment modal
       if (paymentMethod === 'razorpay') {
-        const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_SpJjXE3wMCFqWW
-        ';
+        const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_SpJjXE3wMCFqWW';
         const rzpWindow = (window as any).Razorpay;
         
         if (!rzpWindow) {
