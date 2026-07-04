@@ -49,6 +49,8 @@ export default function ProfilePage() {
             if (pDoc.exists()) products.push({ id: pDoc.id, ...pDoc.data() } as Product);
           }
           setWishlistProducts(products);
+        } else {
+          setWishlistProducts([]);
         }
       } catch (error) {
         console.error(error);

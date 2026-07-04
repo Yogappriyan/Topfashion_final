@@ -365,7 +365,7 @@ export default function Home() {
                       <div className="flex items-center space-x-3">
                         <button
                           onClick={() => navigate(`/shop?category=${sec.tag}`)}
-                          className="text-[10px] font-bold uppercase tracking-[0.2em] hover:opacity-75 transition-opacity py-2"
+                          className="text-[16px] font-bold uppercase tracking-[0.2em] hover:opacity-75 transition-opacity py-2"
                         >
                           View All
                         </button>

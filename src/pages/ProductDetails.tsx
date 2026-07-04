@@ -144,7 +144,7 @@ export default function ProductDetails() {
       productId: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0],
+      image: (product.images && product.images.length > activeImage) ? product.images[activeImage] : (product.images?.[0] || ''),
       quantity,
       size: selectedSize,
       color: selectedColor
@@ -504,7 +504,17 @@ export default function ProductDetails() {
                   return (
                     <button
                       key={color}
-                      onClick={() => setSelectedColor(color)}
+                      onClick={() => {
+                        setSelectedColor(color);
+                        const colorsList = product.colors && product.colors.length > 0 
+                          ? product.colors 
+                          : ['Jet Black', 'Pure White', 'Warm Beige', 'Navy Blue', 'Slate Grey'];
+                        const colorIndex = colorsList.indexOf(color);
+                        if (colorIndex !== -1 && product.images && product.images.length > 0) {
+                          const targetImageIdx = colorIndex % product.images.length;
+                          setActiveImage(targetImageIdx);
+                        }
+                      }}
                       className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all relative ${
                         selectedColor === color
                           ? 'border-black scale-110 shadow-xl ring-4 ring-black/10'
@@ -851,7 +861,17 @@ export default function ProductDetails() {
                         return (
                           <button
                             key={color}
-                            onClick={() => setQvColor(color)}
+                            onClick={() => {
+                              setQvColor(color);
+                              const colorsList = quickViewProduct.colors && quickViewProduct.colors.length > 0
+                                ? quickViewProduct.colors
+                                : ['Jet Black', 'Pure White', 'Warm Beige', 'Navy Blue', 'Slate Grey'];
+                              const colorIndex = colorsList.indexOf(color);
+                              if (colorIndex !== -1 && quickViewProduct.images && quickViewProduct.images.length > 0) {
+                                const targetImageIdx = colorIndex % quickViewProduct.images.length;
+                                setActiveQvImage(targetImageIdx);
+                              }
+                            }}
                             className={`w-9 h-9 rounded-full border flex items-center justify-center transition-all relative ${
                               qvColor === color
                                 ? 'border-black scale-105 shadow-md ring-4 ring-black/5'
@@ -904,7 +924,7 @@ export default function ProductDetails() {
                         productId: quickViewProduct.id,
                         name: quickViewProduct.name,
                         price: quickViewProduct.price,
-                        image: quickViewProduct.images[0],
+                        image: (quickViewProduct.images && quickViewProduct.images.length > activeQvImage) ? quickViewProduct.images[activeQvImage] : (quickViewProduct.images?.[0] || ''),
                         quantity: qvQuantity,
                         size: qvSize || undefined,
                         color: qvColor

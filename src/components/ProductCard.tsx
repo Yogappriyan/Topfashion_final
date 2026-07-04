@@ -5,6 +5,9 @@ import { motion } from 'motion/react';
 import { Product } from '../types';
 import { useCart } from '../contexts/CartContext';
 import { toast } from 'react-hot-toast';
+import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+import { useAuth } from '../contexts/AuthContext';
 
 interface ProductCardProps {
   product: Product;
@@ -13,6 +16,9 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
+  const { user, profile } = useAuth();
+
+  const isWishlisted = profile?.wishlist?.includes(product.id) || false;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -30,6 +36,26 @@ export default function ProductCard({ product }: ProductCardProps) {
       size: product.sizes && product.sizes.length > 0 ? product.sizes[0] : undefined
     });
     toast.success(`${product.name} added to cart`);
+  };
+
+  const handleToggleWishlist = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      return toast.error('Please sign in first');
+    }
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      if (isWishlisted) {
+        await updateDoc(userRef, { wishlist: arrayRemove(product.id) });
+        toast.success('Removed from wishlist');
+      } else {
+        await updateDoc(userRef, { wishlist: arrayUnion(product.id) });
+        toast.success('Added to wishlist');
+      }
+    } catch (error) {
+      toast.error('Action failed');
+    }
   };
 
   return (
@@ -52,6 +78,16 @@ export default function ProductCard({ product }: ProductCardProps) {
               className="p-2 sm:p-3 bg-white hover:bg-black hover:text-white rounded-full shadow-lg transition-all active:scale-90"
             >
               <ShoppingBag className="w-3.5 h-3.5 sm:w-4 h-4" />
+            </button>
+            <button 
+              onClick={handleToggleWishlist}
+              className={`md:hidden p-2 sm:p-3 rounded-full shadow-lg transition-all active:scale-90 ${
+                isWishlisted 
+                  ? 'bg-red-50 text-red-500 hover:bg-red-100' 
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <Heart className={`w-3.5 h-3.5 sm:w-4 h-4 ${isWishlisted ? 'fill-red-500' : ''}`} />
             </button>
           </div>
           {product.stock <= 5 && product.stock > 0 && (
