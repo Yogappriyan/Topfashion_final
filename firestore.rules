@@ -16,7 +16,7 @@ service cloud.firestore {
 
     function isAdmin() {
       return isSignedIn() && (
-        request.auth.token.email in ['vkalvaro1005@gmail.com', 'vishwa10230506@gmail.com'] ||
+        request.auth.token.email in ['vkalvaro1005@gmail.com', 'vishwa10230506@gmail.com', 'topfashiontrichy@gmail.com'] ||
         (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && getUserData().role == 'admin')
       );
     }
@@ -111,11 +111,11 @@ service cloud.firestore {
     match /users/{userId} {
       allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin()) && isValidId(userId);
       allow create: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && (
-        incoming().role == 'customer' || (incoming().role == 'admin' && request.auth.token.email in ['vkalvaro1005@gmail.com', 'vishwa10230506@gmail.com'])
+        incoming().role == 'customer' || (incoming().role == 'admin' && request.auth.token.email in ['vkalvaro1005@gmail.com', 'vishwa10230506@gmail.com', 'topfashiontrichy@gmail.com'])
       );
       allow update: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && (
         (!incoming().diff(existing()).affectedKeys().hasAny(['role']) && incoming().role == existing().role) || 
-        (incoming().role == 'admin' && request.auth.token.email in ['vkalvaro1005@gmail.com', 'vishwa10230506@gmail.com'])
+        (incoming().role == 'admin' && request.auth.token.email in ['vkalvaro1005@gmail.com', 'vishwa10230506@gmail.com', 'topfashiontrichy@gmail.com'])
       );
     }
   }
