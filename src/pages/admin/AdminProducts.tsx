@@ -29,7 +29,9 @@ export default function AdminProducts() {
     stock: 0,
     sizes: ['M'],
     colors: ['Jet Black'],
-    isFeatured: false
+    isFeatured: false,
+    availableFrom: '',
+    offerUntil: ''
   });
 
   const availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', 'Free Size'];
@@ -57,7 +59,9 @@ export default function AdminProducts() {
           images: d.images || [],
           sizes: d.sizes || [],
           colors: d.colors || ['Jet Black'],
-          originalPrice: d.originalPrice || d.price
+          originalPrice: d.originalPrice || d.price,
+          availableFrom: d.availableFrom || '',
+          offerUntil: d.offerUntil || ''
         } as Product;
       });
       setProducts(data);
@@ -82,7 +86,9 @@ export default function AdminProducts() {
         stock: product.stock,
         sizes: product.sizes || ['M'],
         colors: product.colors || ['Jet Black'],
-        isFeatured: product.isFeatured || false
+        isFeatured: product.isFeatured || false,
+        availableFrom: product.availableFrom || '',
+        offerUntil: product.offerUntil || ''
       });
     } else {
       setEditingProduct(null);
@@ -96,7 +102,9 @@ export default function AdminProducts() {
         stock: 0,
         sizes: ['M'],
         colors: ['Jet Black'],
-        isFeatured: false
+        isFeatured: false,
+        availableFrom: '',
+        offerUntil: ''
       });
     }
     setIsModalOpen(true);
@@ -187,40 +195,40 @@ export default function AdminProducts() {
 
   return (
     <div className="min-h-screen bg-[#fdfbf7] text-[#1a1a1a] font-sans selection:bg-black selection:text-white">
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-12">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
-          <div className="flex items-center space-x-6">
-            <h1 className="text-6xl font-serif tracking-tight">Products</h1>
-            <span className="text-gray-300 text-3xl font-light">/</span>
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mt-2">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 md:mb-16 gap-4 md:gap-8">
+          <div className="flex items-center space-x-3 md:space-x-6">
+            <h1 className="text-3xl md:text-6xl font-serif tracking-tight">Products</h1>
+            <span className="text-gray-300 text-xl md:text-3xl font-light">/</span>
+            <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mt-1 md:mt-2">
               {filteredProducts.length} ITEMS
             </span>
           </div>
 
-          <div className="flex flex-1 max-w-2xl w-full items-center space-x-4">
+          <div className="flex flex-row w-full items-center space-x-2 md:space-x-4">
             <div className="relative flex-1 group">
               <input 
                 type="text" 
                 placeholder="Search products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-6 py-4 bg-white border border-black/5 rounded-none text-sm focus:outline-none focus:ring-1 focus:ring-black/10 transition-all shadow-sm"
+                className="w-full pl-9 pr-4 py-2.5 md:pl-12 md:pr-6 md:py-4 bg-white border border-black/5 rounded-none text-xs md:text-sm focus:outline-none focus:ring-1 focus:ring-black/10 transition-all shadow-sm"
               />
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-3.5 md:w-4 h-3.5 md:h-4 text-gray-400" />
             </div>
             <button 
               onClick={() => handleOpenModal()}
-              className="bg-[#1a1a1a] text-white px-8 py-4 flex items-center space-x-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-black transition-all shadow-lg shadow-black/20 active:scale-95 whitespace-nowrap"
+              className="bg-[#1a1a1a] text-white px-4 py-2.5 md:px-8 md:py-4 flex items-center space-x-2 md:space-x-3 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-black transition-all shadow-lg shadow-black/20 active:scale-95 whitespace-nowrap"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-3.5 md:w-4 h-3.5 md:h-4" />
               <span>ADD NEW</span>
             </button>
           </div>
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
           <AnimatePresence>
             {filteredProducts.map((p, idx) => (
               <motion.div 
@@ -240,42 +248,42 @@ export default function AdminProducts() {
                   />
                   
                   {/* Action Overlays */}
-                  <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute top-2 right-2 md:top-4 md:right-4 flex space-x-1.5 md:space-x-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
                     <button 
                       onClick={() => handleOpenModal(p)}
-                      className="p-2.5 bg-white text-black rounded-sm shadow-xl hover:bg-black hover:text-white transition-all transform hover:-translate-y-1"
+                      className="p-1.5 md:p-2.5 bg-white text-black rounded-sm shadow-xl hover:bg-black hover:text-white transition-all transform hover:-translate-y-1"
                     >
-                      <Edit2 className="w-3.5 h-3.5" />
+                      <Edit2 className="w-3 md:w-3.5 h-3 md:h-3.5" />
                     </button>
                     <button 
                       onClick={() => handleDelete(p.id)}
-                      className="p-2.5 bg-white text-red-500 rounded-sm shadow-xl hover:bg-red-500 hover:text-white transition-all transform hover:-translate-y-1"
+                      className="p-1.5 md:p-2.5 bg-white text-red-500 rounded-sm shadow-xl hover:bg-red-500 hover:text-white transition-all transform hover:-translate-y-1"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-3 md:w-3.5 h-3 md:h-3.5" />
                     </button>
                   </div>
 
                   {p.isFeatured && (
-                    <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 text-[8px] font-bold uppercase tracking-widest">
+                    <div className="absolute top-2 left-2 md:top-4 md:left-4 bg-black text-white px-2 py-0.5 md:px-3 md:py-1 text-[7px] md:text-[8px] font-bold uppercase tracking-widest">
                       Featured
                     </div>
                   )}
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
-                  <h3 className="text-xs font-bold uppercase tracking-[0.1em] text-gray-900 mb-2 truncate">
+                <div className="p-3 md:p-6">
+                  <h3 className="text-[10px] md:text-xs font-bold uppercase tracking-[0.1em] text-gray-900 mb-1 md:mb-2 truncate">
                     {p.name}
                   </h3>
-                  <div className="flex justify-between items-center text-[10px] font-medium text-gray-400 uppercase tracking-widest mb-4">
+                  <div className="flex justify-between items-center text-[8px] md:text-[10px] font-medium text-gray-400 uppercase tracking-widest mb-2 md:mb-4">
                     <span>{p.category}</span>
                     <span className="w-1 h-1 bg-gray-200 rounded-full" />
                     <span>QTY: {p.stock}</span>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <span className="text-sm font-bold text-black">₹{p.price.toLocaleString()}</span>
+                  <div className="flex items-center space-x-2 md:space-x-3">
+                    <span className="text-xs md:text-sm font-bold text-black">₹{p.price.toLocaleString()}</span>
                     {p.originalPrice && p.originalPrice > p.price && (
-                      <span className="text-xs text-gray-400 line-through">₹{p.originalPrice.toLocaleString()}</span>
+                      <span className="text-[10px] md:text-xs text-gray-400 line-through">₹{p.originalPrice.toLocaleString()}</span>
                     )}
                   </div>
                 </div>
@@ -385,6 +393,27 @@ export default function AdminProducts() {
                         onChange={(e) => setFormData({...formData, stock: Number(e.target.value)})}
                         className="w-full py-4 border-b border-gray-200 focus:border-black outline-none transition-colors"
                       />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Available From (Date)</label>
+                        <input 
+                          type="date" 
+                          value={formData.availableFrom}
+                          onChange={(e) => setFormData({...formData, availableFrom: e.target.value})}
+                          className="w-full py-4 border-b border-[#e5e7eb] focus:border-black outline-none transition-colors text-sm"
+                        />
+                      </div>
+                      <div className="space-y-4">
+                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Offer Valid Until (Date)</label>
+                        <input 
+                          type="date" 
+                          value={formData.offerUntil}
+                          onChange={(e) => setFormData({...formData, offerUntil: e.target.value})}
+                          className="w-full py-4 border-b border-[#e5e7eb] focus:border-black outline-none transition-colors text-sm"
+                        />
+                      </div>
                     </div>
 
                     <label className="flex items-center space-x-4 cursor-pointer group">

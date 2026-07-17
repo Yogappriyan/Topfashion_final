@@ -65,8 +65,65 @@ function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="fixed top-0 w-full z-50 flex flex-col">
+      {/* Premium Marquee Coupon codes banner styled exactly like the provided reference */}
+      <div className="w-full bg-[#0a0a0a] text-white py-2 overflow-hidden border-b border-white/5 relative z-50 select-none">
+        <div className="animate-marquee whitespace-nowrap flex items-center">
+          {/* Coupon 1 */}
+          <div className="inline-flex items-center mx-12">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white">
+              COUPON CODE: <span className="text-[#FF5500] font-extrabold tracking-widest ml-1.5">WELCOME10</span>
+            </span>
+            <span className="mx-4 text-white/30 text-xs">•</span>
+            <span className="text-[9px] sm:text-[10px] font-semibold tracking-wide text-gray-400">FLAT 10% OFF ON YOUR FIRST ORDER</span>
+          </div>
+          {/* Coupon 2 */}
+          <div className="inline-flex items-center mx-12">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white">
+              COUPON CODE: <span className="text-[#FF5500] font-extrabold tracking-widest ml-1.5">FESTIVE15</span>
+            </span>
+            <span className="mx-4 text-white/30 text-xs">•</span>
+            <span className="text-[9px] sm:text-[10px] font-semibold tracking-wide text-gray-400">FLAT 15% OFF ON ALL ETHNIC WEAR</span>
+          </div>
+          {/* Coupon 3 */}
+          <div className="inline-flex items-center mx-12">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white">
+              COUPON CODE: <span className="text-[#FF5500] font-extrabold tracking-widest ml-1.5">FREESHIP</span>
+            </span>
+            <span className="mx-4 text-white/30 text-xs">•</span>
+            <span className="text-[9px] sm:text-[10px] font-semibold tracking-wide text-gray-400">FREE PAN-INDIA DELIVERY ON ORDERS OVER ₹1,499</span>
+          </div>
+
+          {/* Repeat for seamless marquee scroll loop */}
+          {/* Coupon 1 */}
+          <div className="inline-flex items-center mx-12">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white">
+              COUPON CODE: <span className="text-[#FF5500] font-extrabold tracking-widest ml-1.5">WELCOME10</span>
+            </span>
+            <span className="mx-4 text-white/30 text-xs">•</span>
+            <span className="text-[9px] sm:text-[10px] font-semibold tracking-wide text-gray-400">FLAT 10% OFF ON YOUR FIRST ORDER</span>
+          </div>
+          {/* Coupon 2 */}
+          <div className="inline-flex items-center mx-12">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white">
+              COUPON CODE: <span className="text-[#FF5500] font-extrabold tracking-widest ml-1.5">FESTIVE15</span>
+            </span>
+            <span className="mx-4 text-white/30 text-xs">•</span>
+            <span className="text-[9px] sm:text-[10px] font-semibold tracking-wide text-gray-400">FLAT 15% OFF ON ALL ETHNIC WEAR</span>
+          </div>
+          {/* Coupon 3 */}
+          <div className="inline-flex items-center mx-12">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white">
+              COUPON CODE: <span className="text-[#FF5500] font-extrabold tracking-widest ml-1.5">FREESHIP</span>
+            </span>
+            <span className="mx-4 text-white/30 text-xs">•</span>
+            <span className="text-[9px] sm:text-[10px] font-semibold tracking-wide text-gray-400">FREE PAN-INDIA DELIVERY ON ORDERS OVER ₹1,499</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group">
@@ -274,6 +331,7 @@ function Navbar() {
           </>
         )}
       </AnimatePresence>
+      </div>
     </nav>
   );
 }
@@ -474,7 +532,7 @@ export default function App() {
           <div className="min-h-screen bg-white text-black selection:bg-black selection:text-white font-sans antialiased pb-20 md:pb-0">
             <Toaster position="bottom-right" />
             <Navbar />
-            <main className="pt-20">
+            <main className="pt-[116px]">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/shop" element={<Shop />} />

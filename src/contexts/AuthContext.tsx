@@ -21,6 +21,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     let unsubscribeProfile: (() => void) | null = null;
+    const adminEmails = ['vkalvaro1005@gmail.com', 'vishwa10230506@gmail.com', 'topfashiontrichy@gmail.com'];
 
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       setUser(user);
@@ -32,6 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (user) {
         const userDocRef = doc(db, 'users', user.uid);
+        const isEmailAdmin = user.email && adminEmails.includes(user.email.toLowerCase());
         try {
           const userDoc = await getDoc(userDocRef);
           
@@ -40,7 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             try {
               const adminProfile: UserProfile = {
                 email: user.email || '',
-                role: 'admin',
+                role: isEmailAdmin ? 'admin' : 'customer',
                 wishlist: []
               };
               await setDoc(userDocRef, adminProfile);
@@ -55,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
           } else {
             const data = userDoc.data() as UserProfile;
-            if (data.role !== 'admin') {
+            if (isEmailAdmin && data.role !== 'admin') {
               // Try to promote to admin. This will succeed ONLY if firestore rules allow it.
               try {
                 const updatedData = { ...data, role: 'admin' as const };
@@ -96,8 +98,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => auth.signOut();
 
+  const adminEmails = ['vkalvaro1005@gmail.com', 'vishwa10230506@gmail.com', 'topfashiontrichy@gmail.com'];
+  const isEmailAdmin = user?.email && adminEmails.includes(user.email.toLowerCase());
+  const isAdmin = profile?.role === 'admin' || !!isEmailAdmin;
+
   return (
-    <AuthContext.Provider value={{ user, profile, logout, loading, isAdmin: profile?.role === 'admin' }}>
+    <AuthContext.Provider value={{ user, profile, logout, loading, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );
