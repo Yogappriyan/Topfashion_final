@@ -264,22 +264,22 @@ export default function Home() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
           {[
             {
-              title: "Feeding Lounge Wear",
+              title: "Plain Shirts",
               image: "https://res.cloudinary.com/dd5uc8vjh/image/upload/Screenshot_2026-05-17_193837_wdbmld",
               link: "/shop?search=satin"
             },
             {
-              title: "Maternity Maxi dresses",
+              title: "Polofit Pants",
               image: "https://res.cloudinary.com/dd5uc8vjh/image/upload/Screenshot_2026-05-17_193641_x74c6j",
               link: "/shop?search=polofit"
             },
             {
-              title: "Non Feeding Lounge Wear",
+              title: "Plus size collections",
               image: "https://res.cloudinary.com/dd5uc8vjh/image/upload/Screenshot_2026-05-17_194159_gvnkf4",
               link: "/shop?search=Linen"
             },
             {
-              title: "Zipless Feeding Pant Set",
+              title: "Combo collections",
               image: "https://res.cloudinary.com/dd5uc8vjh/image/upload/Screenshot_2026-05-17_194804_x0h38w",
               link: "/shop?search=pant"
             }
