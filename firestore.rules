@@ -14,10 +14,22 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
     }
 
+    function isAuthAdmin() {
+      return isSignedIn() && 'email' in request.auth.token && (
+        request.auth.token.email in [
+          'vkalvaro1005@gmail.com', 'vishwa10230506@gmail.com', 'topfashiontrichy@gmail.com',
+          'Vkalvaro1005@gmail.com', 'Vishwa10230506@gmail.com', 'Topfashiontrichy@gmail.com',
+          'TopFashionTrichy@gmail.com', 'TOPFASHIONTRICHY@GMAIL.COM'
+        ] || 
+        request.auth.token.email.matches('(?i)^(vkalvaro1005|vishwa10230506|topfashiontrichy)@gmail\\.com$')
+      );
+    }
+
     function isAdmin() {
-      return isSignedIn() && (
-        request.auth.token.email in ['vkalvaro1005@gmail.com', 'vishwa10230506@gmail.com', 'topfashiontrichy@gmail.com'] ||
-        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && getUserData().role == 'admin')
+      return isAuthAdmin() || (
+        isSignedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+        getUserData().role == 'admin'
       );
     }
 
@@ -111,11 +123,11 @@ service cloud.firestore {
     match /users/{userId} {
       allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin()) && isValidId(userId);
       allow create: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && (
-        incoming().role == 'customer' || (incoming().role == 'admin' && request.auth.token.email in ['vkalvaro1005@gmail.com', 'vishwa10230506@gmail.com', 'topfashiontrichy@gmail.com'])
+        incoming().role == 'customer' || (incoming().role == 'admin' && isAuthAdmin())
       );
       allow update: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && (
         (!incoming().diff(existing()).affectedKeys().hasAny(['role']) && incoming().role == existing().role) || 
-        (incoming().role == 'admin' && request.auth.token.email in ['vkalvaro1005@gmail.com', 'vishwa10230506@gmail.com', 'topfashiontrichy@gmail.com'])
+        (incoming().role == 'admin' && isAuthAdmin())
       );
     }
   }
